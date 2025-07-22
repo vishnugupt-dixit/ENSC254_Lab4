@@ -151,6 +151,8 @@ void cacheSetUp(Cache *cache, char *name) {
 // deallocate the memory space for the cache
 void deallocate(Cache *cache) {
   /* YOUR CODE HERE */
+
+  free(cache);
 }
 
 // print out summary stats for the cache
