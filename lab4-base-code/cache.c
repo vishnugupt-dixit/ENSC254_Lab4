@@ -93,7 +93,7 @@ unsigned long long cache_tag(const unsigned long long address,
 unsigned long long cache_set(const unsigned long long address,
                              const Cache *cache) {
   /* YOUR CODE HERE */
-  return 0;
+  return (address >> cache->blockBits) & ((1ULL << cache->setBits) - 1);
 }
 
 // Check if the address is found in the cache. If so, return true. else return false.
