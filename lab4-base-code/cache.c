@@ -44,32 +44,31 @@ result operateCache(const unsigned long long address, Cache *cache) {
   /* YOUR CODE HERE */
   Line line;
   line.lru_clock++;
+  result r
   
 
-  if (probe_cache == 1){
+  if (probe_cache){
     hit_cacheline;
     cache->hit_count++;
-    result r;
     r.status;
-    return r;
+    
   } else{
     insert_cacheline;
-      if (insert_cacheline == 1){
+      if (insert_cacheline){
         cache->miss_count++;
-        result r;
-        r.status;
-        return r;
+        r.status = CACHE_MISS;
+        r.insert_block_addr = address_to_block;
+
       }else{
         victim_cacheline;
         replace_cacheline;
         cache->eviction_count++;
-        result r;
-        r.victim_block_addr= victim_cacheline;
-        r.status;
-        return r;
+        r.victim_block_addr = victim_cacheline;
+        r.status = CACHE_EVICT;
+        r.instert_block_addr = address_to_block;
       }
   }
-  
+  return r;
 }
 
 // HELPER FUNCTIONS USEFUL FOR IMPLEMENTING THE CACHE
