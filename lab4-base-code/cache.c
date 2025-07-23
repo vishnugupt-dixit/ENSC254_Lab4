@@ -168,6 +168,7 @@ bool insert_cacheline(const unsigned long long address, Cache *cache) {
     return false;
    }
    }
+  }
    
 
 
@@ -200,6 +201,7 @@ unsigned long long victim_cacheline(const unsigned long long address, const Cach
         }
       }
     }
+  }
 
 /* Replace the victim cacheline with the new address to insert. Note for the victim cachline,
  * we only have its block address. For the new address to be inserted, we have its full address.
