@@ -42,30 +42,30 @@ void print_result(result r) {
  */
 result operateCache(const unsigned long long address, Cache *cache) {
   /* YOUR CODE HERE */
-  Line line;
-  line.lru_clock++;
+  Set *set = &cache->sets[cache_set(address, cache)];
+  set->lru_clock++;
   result r;
   
 
-  if (probe_cache){
-    hit_cacheline;
+  if (probe_cache(address,cache)){
+    hit_cacheline(address,cache);
     cache->hit_count++;
-    r.status;
+    r.status=CACHE_HIT;
     
   } else{
-    insert_cacheline;
-      if (insert_cacheline){
+    insert_cacheline(address,cache);
+      if (insert_cacheline(address,cache)){
         cache->miss_count++;
         r.status = CACHE_MISS;
-        r.insert_block_addr = address_to_block;
+        r.insert_block_addr = address_to_block(address,cache);
 
       }else{
-        victim_cacheline;
-        replace_cacheline;
+        victim_cacheline(address,cache);
+        replace_cacheline(address,victim_cacheline(address,cache),cache);
         cache->eviction_count++;
-        r.victim_block_addr = victim_cacheline;
+        r.victim_block_addr = victim_cacheline(address,cache);
         r.status = CACHE_EVICT;
-        r.insert_block_addr = address_to_block;
+        r.insert_block_addr = address_to_block(address,cache);
       }
   }
   return r;
@@ -150,24 +150,22 @@ void hit_cacheline(const unsigned long long address, Cache *cache){
  */ 
 bool insert_cacheline(const unsigned long long address, Cache *cache) {
   /* YOUR CODE HERE */
-  unsigned long long localTag = cache_tag(address, cache);
-  unsigned long long localsetIndx = cache_set(address, cache);
-  unsigned long long localBlock = address_to_block(address, cache);
-  Set *set = &cache->sets[localsetIndx];
+  //unsigned long long localTag = cache_tag(address, cache);
+  unsigned long long Set_Index = cache_set(address, cache);
+  unsigned long long blk_local = address_to_block(address, cache);
+  Set *set = &cache->sets[Set_Index];
 
   for (int i =0;i< cache->linesPerSet;i++){
    Line *line = &set ->lines[i];
 
    if ((line->valid)==0){
-    line->block_addr = localBlock;
+    line->block_addr = blk_local;
     line->lru_clock = set->lru_clock;
     line->access_counter =1;
     return true;
    }
-   else{
-    return false;
-   }
-   }
+  }
+   return false;
   }
    
 
@@ -176,8 +174,8 @@ bool insert_cacheline(const unsigned long long address, Cache *cache) {
 // depending on the cache replacement policy (LRU and LFU). It returns the block address
 // of the victim cacheline; note we no longer have access to the full address of the victim
 unsigned long long victim_cacheline(const unsigned long long address, const Cache *cache) {
-    unsigned long long set_index = cache_set(address, cache);
-    Set *set = &cache->sets[set_index];
+    unsigned long long Set_indx = cache_set(address, cache);
+    Set *set = &cache->sets[Set_indx];
     Line *victim = &set->lines[0]; // Assume the first line is the victim initially
 
     if (!(cache->lfu)){
@@ -201,6 +199,7 @@ unsigned long long victim_cacheline(const unsigned long long address, const Cach
         }
       }
     }
+    return victim->block_addr;
   }
 
 /* Replace the victim cacheline with the new address to insert. Note for the victim cachline,
@@ -211,8 +210,8 @@ unsigned long long victim_cacheline(const unsigned long long address, const Cach
 void replace_cacheline(const unsigned long long victim_block_addr, const unsigned long long insert_addr, Cache *cache)
 {
   /* YOUR CODE HERE */
-  int set_index = cache_set(victim_block_addr, cache);
-  Set *set = &cache->sets[set_index];
+  int Set_indx = cache_set(victim_block_addr, cache);
+  Set *set = &cache->sets[Set_indx];
 
   unsigned long long victim_tag = cache_tag(victim_block_addr, cache);
 

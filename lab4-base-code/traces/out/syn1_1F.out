@@ -1,17 +1,17 @@
-L 1,1
-L 0,1
-L 3,1
-L 2,1
-S 4,1
-L 5,1
-S 6,1
-L 7,1
-S 8,1
-L 9,1
-S a,1
-L b,1
-S c,1
-L d,1
-S e,1
-M f,1
-L1 hits: 17, misses: 0, evictions: 0
+L 1,1 [status: miss, insert_block: 0x0]
+L 0,1 [status: miss, insert_block: 0x0]
+L 3,1 [status: miss, insert_block: 0x2]
+L 2,1 [status: miss, insert_block: 0x2]
+S 4,1 [status: miss, insert_block: 0x4]
+L 5,1 [status: miss, insert_block: 0x4]
+S 6,1 [status: miss, insert_block: 0x6]
+L 7,1 [status: miss, insert_block: 0x6]
+S 8,1 [status: miss, insert_block: 0x8]
+L 9,1 [status: miss, insert_block: 0x8]
+S a,1 [status: miss, insert_block: 0xa]
+L b,1 [status: miss, insert_block: 0xa]
+S c,1 [status: miss, insert_block: 0xc]
+L d,1 [status: miss, insert_block: 0xc]
+S e,1 [status: miss, insert_block: 0xe]
+M f,1 [status: miss, insert_block: 0xe]
+L1 hits: 1, misses: 16, evictions: 0
