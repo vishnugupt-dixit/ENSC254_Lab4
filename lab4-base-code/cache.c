@@ -243,7 +243,7 @@ void cacheSetUp(Cache *cache, char *name) {
   for (int i = 0; i < numSets; i++) {
     cache->sets[i].lines = (Line *)malloc(numLinesPerSet *sizeof(Line));
 
-    for (int j = 0; j < numSets; j++) {
+    for (int j = 0; j < numLinesPerSet; j++) {
       cache->sets[i].lines[j].valid = false;
       cache->sets[i].lines[j].tag = 0;
       cache->sets[i].lines[j].lru_clock = 0;
