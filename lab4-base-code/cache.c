@@ -150,8 +150,26 @@ void hit_cacheline(const unsigned long long address, Cache *cache){
  */ 
 bool insert_cacheline(const unsigned long long address, Cache *cache) {
   /* YOUR CODE HERE */
-   return false;
-}
+  unsigned long long localTag = cache_tag(address, cache);
+  unsigned long long localsetIndx = cache_set(address, cache);
+  unsigned long long localBlock = address_to_block(address, cache);
+  Set *set = &cache->sets[localsetIndx];
+
+  for (int i =0;i< cache->linesPerSet;i++){
+   Line *line = &set ->lines[i];
+
+   if ((line->valid)==0){
+    line->block_addr = localBlock;
+    line->lru_clock = set->lru_clock;
+    line->access_counter =1;
+    return true;
+   }
+   else{
+    return false;
+   }
+   }
+   
+
 
 // If there is no empty cacheline, this method figures out which cacheline to replace
 // depending on the cache replacement policy (LRU and LFU). It returns the block address
@@ -178,7 +196,6 @@ unsigned long long victim_cacheline(const unsigned long long address, const Cach
         // if access counter is equal to victims use LRU policy to fix
         if (set->lines[i].valid && (set->lines[i].lru_clock < victim->lru_clock)) {
           victim = &set->lines[i];
-          continue;
         }
         }
       }
@@ -189,7 +206,8 @@ unsigned long long victim_cacheline(const unsigned long long address, const Cach
  * Remember to update the new cache line's lru_clock based on the global lru_clock in the cache
  * set and initiate the cache line's access_counter.
  */
-void replace_cacheline(const unsigned long long victim_block_addr, const unsigned long long insert_addr, Cache *cache) {
+void replace_cacheline(const unsigned long long victim_block_addr, const unsigned long long insert_addr, Cache *cache)
+{
   /* YOUR CODE HERE */
   int set_index = cache_set(victim_block_addr, cache);
   Set *set = &cache->sets[set_index];
@@ -233,8 +251,7 @@ void cacheSetUp(Cache *cache, char *name) {
 
   cache->hit_count = 0;
   cache->miss_count = 0;
-  cache->eviction_count = 0;
-}
+  cache->eviction_count = 0;}
 
 // deallocate the memory space for the cache
 void deallocate(Cache *cache) {
