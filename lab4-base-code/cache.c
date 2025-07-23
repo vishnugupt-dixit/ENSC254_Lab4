@@ -86,7 +86,7 @@ unsigned long long address_to_block(const unsigned long long address,
 unsigned long long cache_tag(const unsigned long long address,
                              const Cache *cache) {
   /* YOUR CODE HERE */
-  return 0;
+  return address >> (cache->setBits + cache->blockBits);
 }
 
 // Return the cache set index of the address
