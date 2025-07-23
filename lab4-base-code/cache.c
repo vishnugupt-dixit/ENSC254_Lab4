@@ -44,7 +44,7 @@ result operateCache(const unsigned long long address, Cache *cache) {
   /* YOUR CODE HERE */
   Line line;
   line.lru_clock++;
-  result r
+  result r;
   
 
   if (probe_cache){
@@ -65,7 +65,7 @@ result operateCache(const unsigned long long address, Cache *cache) {
         cache->eviction_count++;
         r.victim_block_addr = victim_cacheline;
         r.status = CACHE_EVICT;
-        r.instert_block_addr = address_to_block;
+        r.insert_block_addr = address_to_block;
       }
   }
   return r;
