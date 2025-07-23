@@ -156,19 +156,40 @@ bool insert_cacheline(const unsigned long long address, Cache *cache) {
 // If there is no empty cacheline, this method figures out which cacheline to replace
 // depending on the cache replacement policy (LRU and LFU). It returns the block address
 // of the victim cacheline; note we no longer have access to the full address of the victim
-unsigned long long victim_cacheline(const unsigned long long address,
-                                const Cache *cache) {
-  /* YOUR CODE HERE */
-   return 0;
+unsigned long long victim_cacheline(const unsigned long long address, const Cache *cache) {
+    unsigned long long set_index = cache_set(address, cache);
+    Set *set = &cache->sets[set_index];
+    Line *victim = &set->lines[0]; // Assume the first line is the victim initially
+
+    if (!(cache->lfu)){
+      for (int i=0;i<cache->linesPerSet;i++){
+        if (set->lines[i].valid && (set -> lines[i].lru_clock < victim->lru_clock)){
+          victim=&set->lines[i];
+      }
+    }
 }
+
+    if (cache->lfu){
+      for (int i = 0;i<cache->linesPerSet;i++){
+        if (set->lines[i].valid && (set->lines[i].access_counter < victim->access_counter)){
+          victim = &set->lines[i]; // if the value of the access_counter of next line is smaller, set that as the victim
+      }
+      else if (set->lines[i].access_counter == victim->access_counter) {
+        // if access counter is equal to victims use LRU policy to fix
+        if (set->lines[i].valid && (set->lines[i].lru_clock < victim->lru_clock)) {
+          victim = &set->lines[i];
+          continue;
+        }
+        }
+      }
+    }
 
 /* Replace the victim cacheline with the new address to insert. Note for the victim cachline,
  * we only have its block address. For the new address to be inserted, we have its full address.
  * Remember to update the new cache line's lru_clock based on the global lru_clock in the cache
  * set and initiate the cache line's access_counter.
  */
-void replace_cacheline(const unsigned long long victim_block_addr,
-		       const unsigned long long insert_addr, Cache *cache) {
+void replace_cacheline(const unsigned long long victim_block_addr, const unsigned long long insert_addr, Cache *cache) {
   /* YOUR CODE HERE */
   int set_index = cache_set(victim_block_addr, cache);
   Set *set = &cache->sets[set_index];
