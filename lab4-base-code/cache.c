@@ -99,7 +99,16 @@ unsigned long long cache_set(const unsigned long long address,
 // Check if the address is found in the cache. If so, return true. else return false.
 bool probe_cache(const unsigned long long address, const Cache *cache) {
   /* YOUR CODE HERE */
-  return false;
+  unsigned long long set_index = extract_set_index(address, cache);
+  unsigned long long tag = extract_tag(address, cache);
+
+    for (int i = 0; i < cache->linesPerSet; i++) {
+        Line *line = &cache->sets[set_index].lines[i];
+        if (line->valid && line->tag == tag) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Access address in cache. Called only if probe is successful.
