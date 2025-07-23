@@ -147,12 +147,32 @@ void replace_cacheline(const unsigned long long victim_block_addr,
 // Initialize the cache name to the given name 
 void cacheSetUp(Cache *cache, char *name) {
   /* YOUR CODE HERE */
+  cache->name = name;
+
+  int numSets = 1 << cache->setBits;
+  int numLinesPerSet = cache->linesPerSet;
+
+  cache->sets = (Set*)malloc(numSets * sizeof(Set));
+
+  for (int i = 0; i < numSets; i++) {
+    cache->sets[i].lines = (Line *)malloc(numLinesPerSet *sizeof(Line));
+
+    for (int j = 0; j < numSets; j++) {
+      cache->sets[i].lines[j].valid = false;
+      cache->sets[i].lines[j].tag = 0;
+      cache->sets[i].lines[j].lru_clock = 0;
+      cache->sets[i].lines[j].access_counter = 0;
+    }
+  }
+
+  cache->hit_count = 0;
+  cache->miss_count = 0;
+  cache->eviction_count = 0;
 }
 
 // deallocate the memory space for the cache
 void deallocate(Cache *cache) {
   /* YOUR CODE HERE */
-
   free(cache);
 }
 
