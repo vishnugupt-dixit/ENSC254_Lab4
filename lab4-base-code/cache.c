@@ -78,8 +78,8 @@ result operateCache(const unsigned long long address, Cache *cache) {
 unsigned long long address_to_block(const unsigned long long address,
                                 const Cache *cache) {
   /* YOUR CODE HERE */
-  unsigned long long block_mask = ~((1ULL << cache->blockBits) - 1);
-  return address & block_mask;
+  unsigned int b = cache->blockBits;
+  return address & ~((1ULL << b) - 1);
 }
 
 // Return the cache tag of an address
