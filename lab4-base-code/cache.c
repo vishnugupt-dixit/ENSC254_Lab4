@@ -140,6 +140,21 @@ unsigned long long victim_cacheline(const unsigned long long address,
 void replace_cacheline(const unsigned long long victim_block_addr,
 		       const unsigned long long insert_addr, Cache *cache) {
   /* YOUR CODE HERE */
+  int set_index = cache_set(victim_block_addr, cache);
+  Set *set = &cache->sets[set_index];
+
+  unsigned long long victim_tag = cache_tag(victim_block_addr, cache);
+
+  for (int i = 0; i < cache->linesPerSet; i++) {
+    Line *line =  &set->lines[i];
+    if (line->valid && line->tag == victim_tag) {
+      line->tag = cache_tag(insert_addr,cache);
+      line->valid = true;
+      line-> lru_clock = 0;
+      line->access_counter = 1;
+      return; 
+    }
+  }
 }
 
 // allocate the memory space for the cache with the given cache parameters
